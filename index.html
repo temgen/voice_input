@@ -23,11 +23,11 @@ body{touch-action:manipulation;}
 #answerInput{width:100%;height:100%;min-height:0;resize:none;border:5px solid #f59e0b;border-radius:22px;outline:none;padding:14px 18px;font-size:clamp(42px,8dvh,68px);line-height:1.16;font-weight:900;font-family:inherit;background:#fff;color:#111827;text-align:center;overflow-y:auto;}
 #answerInput[readonly]{caret-color:transparent;background:#fffef9;}
 #answerInput:focus{border-color:#2563eb;box-shadow:0 0 0 6px rgba(37,99,235,.16);}
-.controlRow{min-height:66px;display:grid;grid-template-columns:minmax(0,1fr) auto auto auto auto;gap:8px;align-items:stretch;}
+.controlRow{min-height:66px;display:grid;grid-template-columns:minmax(0,1fr) auto auto auto auto auto;gap:8px;align-items:stretch;}
 .message{min-height:66px;display:flex;align-items:center;justify-content:center;text-align:center;border-radius:16px;font-size:clamp(21px,3.8dvh,38px);font-weight:900;background:#f1f5f9;color:#334155;padding:4px 10px;line-height:1.1;overflow:hidden;}
 .message.ok{background:#dcfce7;color:#166534;}.message.ng{background:#fee2e2;color:#b91c1c;}.message.listen{background:#dbeafe;color:#1d4ed8;}.message.manual{background:#ede9fe;color:#5b21b6;}
 button{border:0;border-radius:16px;padding:8px 14px;font-size:clamp(18px,3.5dvh,32px);font-weight:900;font-family:inherit;cursor:pointer;color:#fff;background:#2563eb;min-width:112px;touch-action:manipulation;white-space:nowrap;}
-button.voice{background:#2563eb;min-width:176px;}button.check{background:#16a34a;display:none;}button.next{background:#ea580c;}button.teacher{background:#64748b;min-width:92px;font-size:clamp(16px,3dvh,28px);}button.reset{background:#64748b;}button:disabled{opacity:.45;cursor:not-allowed;}
+button.voice{background:#2563eb;min-width:176px;}button.check{background:#16a34a;display:none;}button.retry{background:#0f766e;min-width:128px;}button.next{background:#ea580c;}button.teacher{background:#64748b;min-width:92px;font-size:clamp(16px,3dvh,28px);}button.reset{background:#64748b;}button:disabled{opacity:.45;cursor:not-allowed;}
 .finishOverlay{position:fixed;inset:0;background:rgba(15,23,42,.82);color:white;display:none;align-items:center;justify-content:center;text-align:center;z-index:10;padding:24px;}
 .finishBox{background:white;color:#111827;border-radius:28px;padding:32px;width:min(92vw,760px);box-shadow:0 20px 60px rgba(0,0,0,.35);}
 .finishBox h1{font-size:clamp(46px,8vw,96px);margin:0 0 18px;color:#16a34a;}.finishBox p{font-size:clamp(24px,4vw,44px);font-weight:900;margin:0 0 22px;}
@@ -36,7 +36,7 @@ button.voice{background:#2563eb;min-width:176px;}button.check{background:#16a34a
 </style>
 </head>
 <body>
-<script type="application/json" id="quizData">{"settings":{"title":"声で答えよう","teacherPasscode":"1234","shuffle":false,"ignoreSpaces":true,"ignorePunctuation":true,"kanaSame":true},"questions":[{"text":"朝です。友達に「ていねいに」あいさつしてみましょう。","answers":["おはよう","おはようございます"],"image":"q1.png"},{"text":"朝です。先生に「ていねいに」あいさつしてみましょう。","answers":["おはようございます"],"image":"q2.png"},{"text":"友達が手伝ってくれました。「ていねいに」お礼を言いましょう。","answers":["ありがとう","ありがとうございます","ありがとうございました"],"image":"q3.png"},{"text":"先生が助けてくれました。「ていねいに」お礼を言いましょう。","answers":["ありがとうございます","ありがとうございました"],"image":"q4.png"},{"text":"やらかしました。友達に「ていねいに」あやまりましょう。","answers":["ごめんなさい","ごめん","すいません","すいませんでした"],"image":"q7.png"},{"text":"やってしまいました。先生に「ていねいに」あやまりましょう","answers":["すいません","すいませんでした","申し訳ありません","申し訳ございません","もうしわけありません","もうしわけございません"],"image":"q8.png"},{"text":"友達の持っているプリントが欲しいとき、なんと言っておねがいしますか？　ていねいにおねがいしましょう","answers":["プリントをください","プリントを下さい","プリントをちょうだい"],"image":"q9.png"},{"text":"先生の持っているプリントが欲しいとき、なんと言っておねがいしますか？　ていねいにおねがいしましょう。","answers":["プリントをください","プリントを下さい","プリントをお願いします","プリントをおねがいします","プリントをくださいおねがいします","プリントを下さいお願いします","プリントを下さいおねがいします","プリントをくださいお願いします"],"image":"q10.png"}]}</script>
+<script type="application/json" id="quizData">{"settings":{"title":"声で答えよう","teacherPasscode":"1234","shuffle":false,"ignoreSpaces":true,"ignorePunctuation":true,"kanaSame":false},"questions":[{"text":"朝です。友達に「ていねいに」あいさつしてみましょう。","answers":["おはよう","おはようございます"],"image":"q1.png"},{"text":"朝です。先生に「ていねいに」あいさつしてみましょう。","answers":["おはようございます"],"image":"q2.png"},{"text":"友達が手伝ってくれました。「ていねいに」お礼を言いましょう。","answers":["ありがとう","ありがとうございます","ありがとうございました"],"image":"q3.png"},{"text":"先生が助けてくれました。「ていねいに」お礼を言いましょう。","answers":["ありがとうございます","ありがとうございました"],"image":"q4.png"},{"text":"やらかしました。友達に「ていねいに」あやまりましょう。","answers":["ごめんなさい","ごめん","すいません","すいませんでした"],"image":"q7.png"},{"text":"やってしまいました。先生に「ていねいに」あやまりましょう","answers":["すいません","すいませんでした","申し訳ありません","申し訳ございません","もうしわけありません","もうしわけございません"],"image":"q8.png"},{"text":"友達の持っているプリントが欲しいとき、なんと言っておねがいしますか？　ていねいにおねがいしましょう","answers":["プリントをください","プリントを下さい","プリントをちょうだい"],"image":"q9.png"},{"text":"先生の持っているプリントが欲しいとき、なんと言っておねがいしますか？　ていねいにおねがいしましょう。","answers":["プリントをください","プリントを下さい","プリントをお願いします","プリントをおねがいします","プリントをくださいおねがいします","プリントを下さいお願いします","プリントを下さいおねがいします","プリントをくださいお願いします"],"image":"q10.png"}]}</script>
 <div class="app">
   <section class="problemArea">
     <div class="topBar"><div id="progress">1 / 1</div><div id="titleText"></div></div>
@@ -51,6 +51,7 @@ button.voice{background:#2563eb;min-width:176px;}button.check{background:#16a34a
       <div id="message" class="message">🎤を押して話してください</div>
       <button class="voice" id="voiceBtn" onclick="startVoice()">🎤 こたえる</button>
       <button class="check" id="checkBtn" onclick="checkAnswer()">判定</button>
+      <button class="retry" id="retryBtn" onclick="retryQuestion()" disabled>もう一度</button>
       <button class="next" id="nextBtn" onclick="nextQuestion()" disabled>次へ</button>
       <button class="teacher" id="teacherBtn" onclick="openManualMode()">先生用</button>
     </div>
@@ -75,6 +76,7 @@ const answerInputEl = document.getElementById("answerInput");
 const messageEl = document.getElementById("message");
 const voiceBtn = document.getElementById("voiceBtn");
 const checkBtn = document.getElementById("checkBtn");
+const retryBtn = document.getElementById("retryBtn");
 const nextBtn = document.getElementById("nextBtn");
 const teacherBtn = document.getElementById("teacherBtn");
 const finishOverlay = document.getElementById("finishOverlay");
@@ -209,6 +211,7 @@ function showQuestion(){
   answerInputEl.readOnly = !manualMode;
   voiceBtn.disabled = false;
   checkBtn.disabled = false;
+  retryBtn.disabled = true;
   nextBtn.disabled = true;
   setMessage(manualMode ? "手入力モードです" : "🎤を押して話してください", manualMode ? "manual" : "");
   requestAnimationFrame(function(){ fitQuestionText(); setTimeout(fitQuestionText, 120); });
@@ -234,6 +237,7 @@ function checkAnswer(){
     answerInputEl.disabled = true;
     voiceBtn.disabled = true;
     checkBtn.disabled = true;
+    retryBtn.disabled = false;
     nextBtn.disabled = false;
     nextBtn.focus();
   }else{
@@ -241,6 +245,14 @@ function checkAnswer(){
     if(manualMode){ answerInputEl.focus(); answerInputEl.select(); }
     else{ voiceBtn.disabled = false; }
   }
+}
+
+function retryQuestion(){
+  if(!answered) return;
+  if(listening && recognition){
+    try{ recognition.abort(); }catch(e){}
+  }
+  showQuestion();
 }
 
 function nextQuestion(){
