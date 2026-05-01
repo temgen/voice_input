@@ -6,248 +6,45 @@
 <title>声で答えよう</title>
 <style>
 *{box-sizing:border-box;}
-html,body{
-  margin:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  font-family:"UD デジタル 教科書体 NK-B","UD デジタル 教科書体","Yu Gothic","Meiryo",sans-serif;
-  background:#f8fafc;
-  color:#111827;
-}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:"UD デジタル 教科書体 NK-B","UD デジタル 教科書体","Yu Gothic","Meiryo",sans-serif;background:#f8fafc;color:#111827;}
 body{touch-action:manipulation;}
-.app{
-  width:100vw;
-  height:100dvh;
-  display:grid;
-  grid-template-rows:50dvh 50dvh;
-  overflow:hidden;
-}
-.problemArea{
-  position:relative;
-  min-height:0;
-  background:linear-gradient(180deg,#eff6ff,#ffffff);
-  border-bottom:4px solid #cbd5e1;
-  padding:52px 14px 12px;
-  overflow:hidden;
-}
-.topBar{
-  position:absolute;
-  top:8px;
-  left:12px;
-  right:12px;
-  height:34px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  pointer-events:none;
-  font-weight:900;
-  color:#334155;
-  font-size:clamp(15px,2.2vw,26px);
-  white-space:nowrap;
-}
-#titleText{
-  max-width:70vw;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  text-align:right;
-}
-.problemContent{
-  width:100%;
-  height:100%;
-  min-height:0;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-  align-items:stretch;
-}
-.imagePane,.textPane{
-  min-width:0;
-  min-height:0;
-  border-radius:22px;
-  overflow:hidden;
-}
-.imagePane{
-  background:#ffffff;
-  border:3px solid #dbeafe;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  box-shadow:0 8px 22px rgba(15,23,42,.12);
-}
-.problemImage{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  display:none;
-}
-.noImageText{
-  color:#94a3b8;
-  font-weight:900;
-  font-size:clamp(24px,4vw,52px);
-  text-align:center;
-  padding:12px;
-}
-.textPane{
-  background:#ffffff;
-  border:3px solid #bfdbfe;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:10px 16px;
-  box-shadow:0 8px 22px rgba(15,23,42,.08);
-}
-.questionText{
-  width:100%;
-  max-height:100%;
-  overflow:hidden;
-  text-align:left;
-  white-space:pre-wrap;
-  line-height:1.14;
-  font-weight:900;
-  font-size:56px;
-  word-break:break-word;
-  overflow-wrap:anywhere;
-}
-.answerArea{
-  position:relative;
-  min-height:0;
-  background:#fff7ed;
-  padding:10px 14px 12px;
-  display:grid;
-  grid-template-rows:minmax(0,1fr) auto;
-  gap:8px;
-  overflow:hidden;
-}
-#answerInput{
-  width:100%;
-  height:100%;
-  min-height:0;
-  resize:none;
-  border:5px solid #f59e0b;
-  border-radius:22px;
-  outline:none;
-  padding:14px 18px;
-  font-size:clamp(44px,8.6dvh,72px);
-  line-height:1.18;
-  font-weight:900;
-  font-family:inherit;
-  background:#fff;
-  color:#111827;
-  text-align:center;
-  overflow-y:auto;
-}
-#answerInput[readonly]{
-  caret-color:transparent;
-  background:#fffef9;
-}
+.app{width:100vw;height:100dvh;display:grid;grid-template-rows:50dvh 50dvh;overflow:hidden;}
+.problemArea{position:relative;min-height:0;background:linear-gradient(180deg,#eff6ff,#ffffff);border-bottom:4px solid #cbd5e1;padding:50px 14px 12px;overflow:hidden;}
+.topBar{position:absolute;top:8px;left:12px;right:12px;height:34px;display:flex;justify-content:space-between;align-items:center;gap:10px;font-weight:900;color:#334155;font-size:clamp(15px,2.2vw,26px);white-space:nowrap;}
+#titleText{max-width:70vw;overflow:hidden;text-overflow:ellipsis;text-align:right;}
+.problemContent{width:100%;height:100%;min-height:0;display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch;}
+.imagePane,.textPane{min-width:0;min-height:0;border-radius:22px;overflow:hidden;}
+.imagePane{background:#fff;border:3px solid #dbeafe;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 22px rgba(15,23,42,.12);}
+.problemImage{width:100%;height:100%;object-fit:contain;display:none;}
+.noImageText{color:#94a3b8;font-weight:900;font-size:clamp(20px,3.4vw,44px);text-align:center;padding:12px;white-space:pre-wrap;line-height:1.25;}
+.textPane{background:#fff;border:3px solid #bfdbfe;display:flex;align-items:center;justify-content:center;padding:8px 14px;box-shadow:0 8px 22px rgba(15,23,42,.08);}
+.questionText{width:100%;max-height:100%;overflow:hidden;text-align:left;white-space:pre-wrap;line-height:1.12;font-weight:900;font-size:52px;word-break:break-word;overflow-wrap:anywhere;}
+.answerArea{position:relative;min-height:0;background:#fff7ed;padding:10px 14px 12px;display:grid;grid-template-rows:minmax(0,1fr) auto;gap:8px;overflow:hidden;}
+#answerInput{width:100%;height:100%;min-height:0;resize:none;border:5px solid #f59e0b;border-radius:22px;outline:none;padding:14px 18px;font-size:clamp(42px,8dvh,68px);line-height:1.16;font-weight:900;font-family:inherit;background:#fff;color:#111827;text-align:center;overflow-y:auto;}
+#answerInput[readonly]{caret-color:transparent;background:#fffef9;}
 #answerInput:focus{border-color:#2563eb;box-shadow:0 0 0 6px rgba(37,99,235,.16);}
-.controlRow{
-  min-height:66px;
-  display:grid;
-  grid-template-columns:minmax(0,1fr) auto auto auto auto;
-  gap:8px;
-  align-items:stretch;
-}
-.message{
-  min-height:66px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  border-radius:16px;
-  font-size:clamp(21px,3.8dvh,38px);
-  font-weight:900;
-  background:#f1f5f9;
-  color:#334155;
-  padding:4px 10px;
-  line-height:1.1;
-  overflow:hidden;
-}
-.message.ok{background:#dcfce7;color:#166534;}
-.message.ng{background:#fee2e2;color:#b91c1c;}
-.message.listen{background:#dbeafe;color:#1d4ed8;}
-.message.manual{background:#ede9fe;color:#5b21b6;}
-button{
-  border:0;
-  border-radius:16px;
-  padding:8px 14px;
-  font-size:clamp(19px,3.6dvh,34px);
-  font-weight:900;
-  font-family:inherit;
-  cursor:pointer;
-  color:#fff;
-  background:#2563eb;
-  min-width:112px;
-  touch-action:manipulation;
-  white-space:nowrap;
-}
-button.voice{background:#2563eb;min-width:176px;}
-button.check{background:#16a34a;display:none;}
-button.next{background:#ea580c;}
-button.teacher{background:#64748b;min-width:92px;font-size:clamp(16px,3dvh,28px);}
-button.reset{background:#64748b;}
-button:disabled{opacity:.45;cursor:not-allowed;}
-.finishOverlay{
-  position:fixed;
-  inset:0;
-  background:rgba(15,23,42,.82);
-  color:white;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  z-index:10;
-  padding:24px;
-}
-.finishBox{
-  background:white;
-  color:#111827;
-  border-radius:28px;
-  padding:32px;
-  width:min(92vw,760px);
-  box-shadow:0 20px 60px rgba(0,0,0,.35);
-}
-.finishBox h1{font-size:clamp(46px,8vw,96px);margin:0 0 18px;color:#16a34a;}
-.finishBox p{font-size:clamp(24px,4vw,44px);font-weight:900;margin:0 0 22px;}
-@media(max-aspect-ratio:4/3){
-  .problemArea{padding-top:48px;}
-  .problemContent{gap:10px;}
-  .questionText{font-size:50px;}
-  #answerInput{font-size:clamp(40px,8dvh,68px);}
-  .controlRow{min-height:60px;}
-  button{min-width:100px;}
-  button.voice{min-width:150px;}
-}
-@media(max-width:760px){
-  .problemContent{grid-template-columns:46% 54%;}
-  .textPane{padding:10px 12px;}
-  .controlRow{grid-template-columns:1fr 1fr 1fr;}
-  .message{grid-column:1 / -1;order:-1;min-height:52px;}
-  button{min-width:0;}
-  button.voice{min-width:0;}
-}
+.controlRow{min-height:66px;display:grid;grid-template-columns:minmax(0,1fr) auto auto auto auto;gap:8px;align-items:stretch;}
+.message{min-height:66px;display:flex;align-items:center;justify-content:center;text-align:center;border-radius:16px;font-size:clamp(21px,3.8dvh,38px);font-weight:900;background:#f1f5f9;color:#334155;padding:4px 10px;line-height:1.1;overflow:hidden;}
+.message.ok{background:#dcfce7;color:#166534;}.message.ng{background:#fee2e2;color:#b91c1c;}.message.listen{background:#dbeafe;color:#1d4ed8;}.message.manual{background:#ede9fe;color:#5b21b6;}
+button{border:0;border-radius:16px;padding:8px 14px;font-size:clamp(18px,3.5dvh,32px);font-weight:900;font-family:inherit;cursor:pointer;color:#fff;background:#2563eb;min-width:112px;touch-action:manipulation;white-space:nowrap;}
+button.voice{background:#2563eb;min-width:176px;}button.check{background:#16a34a;display:none;}button.next{background:#ea580c;}button.teacher{background:#64748b;min-width:92px;font-size:clamp(16px,3dvh,28px);}button.reset{background:#64748b;}button:disabled{opacity:.45;cursor:not-allowed;}
+.finishOverlay{position:fixed;inset:0;background:rgba(15,23,42,.82);color:white;display:none;align-items:center;justify-content:center;text-align:center;z-index:10;padding:24px;}
+.finishBox{background:white;color:#111827;border-radius:28px;padding:32px;width:min(92vw,760px);box-shadow:0 20px 60px rgba(0,0,0,.35);}
+.finishBox h1{font-size:clamp(46px,8vw,96px);margin:0 0 18px;color:#16a34a;}.finishBox p{font-size:clamp(24px,4vw,44px);font-weight:900;margin:0 0 22px;}
+@media(max-aspect-ratio:4/3){.problemArea{padding-top:48px;}.problemContent{gap:10px;}.questionText{font-size:48px;}#answerInput{font-size:clamp(40px,7.8dvh,66px);}.controlRow{min-height:60px;}button{min-width:100px;}button.voice{min-width:150px;}}
+@media(max-width:760px){.problemContent{grid-template-columns:46% 54%;}.textPane{padding:8px 10px;}.controlRow{grid-template-columns:1fr 1fr 1fr;}.message{grid-column:1 / -1;order:-1;min-height:52px;}button,button.voice{min-width:0;}}
 </style>
 </head>
 <body>
+<script type="application/json" id="quizData">{"settings":{"title":"声で答えよう","teacherPasscode":"1234","shuffle":false,"ignoreSpaces":true,"ignorePunctuation":true,"kanaSame":false},"questions":[{"text":"サンプル","answers":["サンプル"],"image":"q1.png"}]}</script>
 <div class="app">
   <section class="problemArea">
-    <div class="topBar">
-      <div id="progress">1 / 1</div>
-      <div id="titleText">声で答えよう</div>
-    </div>
+    <div class="topBar"><div id="progress">1 / 1</div><div id="titleText"></div></div>
     <div class="problemContent">
-      <div class="imagePane">
-        <img id="problemImage" class="problemImage" alt="問題画像">
-        <div id="noImageText" class="noImageText">画像なし</div>
-      </div>
-      <div class="textPane">
-        <div id="questionText" class="questionText"></div>
-      </div>
+      <div class="imagePane"><img id="problemImage" class="problemImage" alt="問題画像"><div id="noImageText" class="noImageText">画像なし</div></div>
+      <div class="textPane"><div id="questionText" class="questionText"></div></div>
     </div>
   </section>
-
   <section class="answerArea">
     <textarea id="answerInput" readonly inputmode="none" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="🎤を押して話してください"></textarea>
     <div class="controlRow">
@@ -259,17 +56,9 @@ button:disabled{opacity:.45;cursor:not-allowed;}
     </div>
   </section>
 </div>
-
-<div id="finishOverlay" class="finishOverlay">
-  <div class="finishBox">
-    <h1>おしまい</h1>
-    <p>全部できました！</p>
-    <button class="reset" onclick="restartQuiz()">もう一回</button>
-  </div>
-</div>
-
+<div id="finishOverlay" class="finishOverlay"><div class="finishBox"><h1>おしまい</h1><p>全部できました！</p><button class="reset" onclick="restartQuiz()">もう一回</button></div></div>
 <script>
-const DATA = {"settings":{"title":"声で答えよう","teacherPasscode":"1234","imageFolder":"images/","shuffle":false,"ignoreSpaces":true,"ignorePunctuation":true,"kanaSame":false},"questions":[{"text":"sample","answers":["サンプル"],"imageName":"q1.png","imageSrc":"images/q1.png"}]};
+const DATA = JSON.parse(document.getElementById("quizData").textContent);
 let questions = DATA.questions.map(function(q){ return Object.assign({}, q); });
 let current = 0;
 let answered = false;
@@ -278,6 +67,7 @@ let listening = false;
 let manualMode = false;
 
 const progressEl = document.getElementById("progress");
+const titleTextEl = document.getElementById("titleText");
 const questionTextEl = document.getElementById("questionText");
 const problemImageEl = document.getElementById("problemImage");
 const noImageTextEl = document.getElementById("noImageText");
@@ -289,12 +79,12 @@ const nextBtn = document.getElementById("nextBtn");
 const teacherBtn = document.getElementById("teacherBtn");
 const finishOverlay = document.getElementById("finishOverlay");
 
-document.getElementById("titleText").textContent = DATA.settings.title || "声で答えよう";
+titleTextEl.textContent = DATA.settings.title || "声で答えよう";
 
 function shuffleArray(arr){
   for(let i=arr.length-1;i>0;i--){
     const j = Math.floor(Math.random()*(i+1));
-    [arr[i],arr[j]]=[arr[j],arr[i]];
+    const tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
   }
 }
 
@@ -303,7 +93,7 @@ function normalizeText(str){
   try{ s = s.normalize("NFKC"); }catch(e){}
   s = s.replace(/　/g," ");
   if(DATA.settings.ignorePunctuation){
-    s = s.replace(/[、。,.!！?？「」『』（）()【】\[\]・･:：;；\"'＂’‘“”\s\n\r\t]/g," ");
+    s = s.replace(/[、。,.!！?？「」『』（）()【】\[\]・･:：;；"'＂’‘“”]/g," ");
   }
   if(DATA.settings.ignoreSpaces){
     s = s.replace(/\s+/g,"");
@@ -318,18 +108,20 @@ function normalizeText(str){
 
 function fitQuestionText(){
   const box = questionTextEl.parentElement;
+  if(!box) return;
   const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-  const maxSize = Math.min(66, Math.max(34, vw * 0.048));
-  const minSize = 20;
-  const limitH = Math.max(40, box.clientHeight - 10);
+  const maxSize = Math.min(58, Math.max(30, vw * 0.044));
+  const minSize = 19;
+  const limitH = Math.max(40, box.clientHeight - 8);
   const limitW = Math.max(40, box.clientWidth - 6);
   let size = maxSize;
   questionTextEl.style.fontSize = size + "px";
-  questionTextEl.style.lineHeight = "1.14";
-
-  while(size > minSize && (questionTextEl.scrollHeight > limitH || questionTextEl.scrollWidth > limitW)){
+  questionTextEl.style.lineHeight = "1.12";
+  let guard = 0;
+  while(size > minSize && guard < 40 && (questionTextEl.scrollHeight > limitH || questionTextEl.scrollWidth > limitW)){
     size -= 2;
     questionTextEl.style.fontSize = size + "px";
+    guard++;
   }
 }
 
@@ -345,7 +137,6 @@ function initSpeech(){
   recognition.interimResults = false;
   recognition.continuous = false;
   recognition.maxAlternatives = 1;
-
   recognition.onstart = function(){
     listening = true;
     voiceBtn.disabled = true;
@@ -393,21 +184,20 @@ function startVoice(){
 
 function showQuestion(){
   answered = false;
-  const q = questions[current];
+  const q = questions[current] || {text:"", image:"", answers:[]};
   progressEl.textContent = (current + 1) + " / " + questions.length;
   questionTextEl.textContent = q.text || "";
-  if(q.imageSrc){
-    problemImageEl.onload = function(){
-      problemImageEl.style.display = "block";
-      noImageTextEl.style.display = "none";
-    };
-    problemImageEl.onerror = function(){
-      problemImageEl.style.display = "none";
-      noImageTextEl.style.display = "block";
-      noImageTextEl.textContent = "画像が見つかりません
-" + (q.imageSrc || "");
-    };
-    problemImageEl.src = q.imageSrc;
+  problemImageEl.onload = function(){
+    problemImageEl.style.display = "block";
+    noImageTextEl.style.display = "none";
+  };
+  problemImageEl.onerror = function(){
+    problemImageEl.style.display = "none";
+    noImageTextEl.style.display = "block";
+    noImageTextEl.textContent = "画像が見つかりません\n" + (q.image || "");
+  };
+  if(q.image){
+    problemImageEl.src = q.image;
   }else{
     problemImageEl.removeAttribute("src");
     problemImageEl.style.display = "none";
@@ -421,10 +211,7 @@ function showQuestion(){
   checkBtn.disabled = false;
   nextBtn.disabled = true;
   setMessage(manualMode ? "手入力モードです" : "🎤を押して話してください", manualMode ? "manual" : "");
-  requestAnimationFrame(function(){
-    fitQuestionText();
-    setTimeout(fitQuestionText, 120);
-  });
+  requestAnimationFrame(function(){ fitQuestionText(); setTimeout(fitQuestionText, 120); });
 }
 
 function setMessage(text, kind){
@@ -439,7 +226,7 @@ function checkAnswer(){
     setMessage(manualMode ? "入力してください" : "もう一度話してください", "ng");
     return;
   }
-  const q = questions[current];
+  const q = questions[current] || {answers:[]};
   const ok = q.answers.some(function(ans){ return normalizeText(ans) === input; });
   if(ok){
     answered = true;
@@ -451,12 +238,8 @@ function checkAnswer(){
     nextBtn.focus();
   }else{
     setMessage("ちがいます。もう一度！", "ng");
-    if(manualMode){
-      answerInputEl.focus();
-      answerInputEl.select();
-    }else{
-      voiceBtn.disabled = false;
-    }
+    if(manualMode){ answerInputEl.focus(); answerInputEl.select(); }
+    else{ voiceBtn.disabled = false; }
   }
 }
 
@@ -487,17 +270,11 @@ function setManualMode(on){
 }
 
 function openManualMode(){
-  if(manualMode){
-    setManualMode(false);
-    return;
-  }
+  if(manualMode){ setManualMode(false); return; }
   const input = prompt("先生用パスコードを入力してください");
   if(input === null) return;
-  if(String(input) === String(DATA.settings.teacherPasscode)){
-    setManualMode(true);
-  }else{
-    setMessage("パスコードが違います", "ng");
-  }
+  if(String(input) === String(DATA.settings.teacherPasscode)) setManualMode(true);
+  else setMessage("パスコードが違います", "ng");
 }
 
 function restartQuiz(){
@@ -510,30 +287,13 @@ function restartQuiz(){
 
 answerInputEl.addEventListener("keydown", function(e){
   if(!manualMode) return;
-  if(e.key === "Enter" && !e.shiftKey){
-    e.preventDefault();
-    checkAnswer();
-  }
+  if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); checkAnswer(); }
 });
-
-answerInputEl.addEventListener("beforeinput", function(e){
-  if(!manualMode){
-    e.preventDefault();
-  }
-});
-
-answerInputEl.addEventListener("paste", function(e){
-  if(!manualMode){
-    e.preventDefault();
-  }
-});
-
+answerInputEl.addEventListener("beforeinput", function(e){ if(!manualMode) e.preventDefault(); });
+answerInputEl.addEventListener("paste", function(e){ if(!manualMode) e.preventDefault(); });
 window.addEventListener("resize", function(){ requestAnimationFrame(fitQuestionText); });
 window.addEventListener("orientationchange", function(){ setTimeout(fitQuestionText, 250); });
-if(document.fonts && document.fonts.ready){
-  document.fonts.ready.then(function(){ fitQuestionText(); }).catch(function(){});
-}
-
+if(document.fonts && document.fonts.ready){ document.fonts.ready.then(function(){ fitQuestionText(); }).catch(function(){}); }
 restartQuiz();
 </script>
 </body>
