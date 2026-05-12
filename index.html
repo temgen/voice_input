@@ -27,7 +27,7 @@ body{touch-action:manipulation;}
 .message{min-height:66px;display:flex;align-items:center;justify-content:center;text-align:center;border-radius:16px;font-size:clamp(21px,3.8dvh,38px);font-weight:900;background:#f1f5f9;color:#334155;padding:4px 10px;line-height:1.1;overflow:hidden;}
 .message.ok{background:#dcfce7;color:#166534;}.message.ng{background:#fee2e2;color:#b91c1c;}.message.listen{background:#dbeafe;color:#1d4ed8;}.message.manual{background:#ede9fe;color:#5b21b6;}
 button{border:0;border-radius:16px;padding:8px 14px;font-size:clamp(18px,3.5dvh,32px);font-weight:900;font-family:inherit;cursor:pointer;color:#fff;background:#2563eb;min-width:112px;touch-action:manipulation;white-space:nowrap;}
-button.voice{background:#2563eb;min-width:176px;}button.check{background:#16a34a;display:none;}button.retry{background:#0f766e;min-width:128px;}button.next{background:#ea580c;}button.teacher{background:#64748b;min-width:92px;font-size:clamp(16px,3dvh,28px);}button.reset{background:#64748b;}button:disabled{opacity:.45;cursor:not-allowed;}
+button.voice{background:#2563eb;min-width:176px;}button.check{background:#16a34a;display:block;}button.retry{background:#0f766e;min-width:128px;}button.next{background:#ea580c;}button.teacher{background:#64748b;min-width:92px;font-size:clamp(16px,3dvh,28px);}button.reset{background:#64748b;}button:disabled{opacity:.45;cursor:not-allowed;}
 .finishOverlay{position:fixed;inset:0;background:rgba(15,23,42,.82);color:white;display:none;align-items:center;justify-content:center;text-align:center;z-index:10;padding:24px;}
 .finishBox{background:white;color:#111827;border-radius:28px;padding:32px;width:min(92vw,760px);box-shadow:0 20px 60px rgba(0,0,0,.35);}
 .finishBox h1{font-size:clamp(46px,8vw,96px);margin:0 0 18px;color:#16a34a;}.finishBox p{font-size:clamp(24px,4vw,44px);font-weight:900;margin:0 0 22px;}
@@ -36,7 +36,7 @@ button.voice{background:#2563eb;min-width:176px;}button.check{background:#16a34a
 </style>
 </head>
 <body>
-<script type="application/json" id="quizData">{"settings":{"title":"声で答えよう","teacherPasscode":"1234","shuffle":false,"ignoreSpaces":true,"ignorePunctuation":true,"kanaSame":true},"questions":[{"text":"サンプル","answers":["どうも","どーも"],"image":"スクリーンショット 2026-05-06 163926.png"}]}</script>
+<script type="application/json" id="quizData">{"settings":{"title":"声で答えよう","teacherPasscode":"1234","shuffle":false,"ignoreSpaces":true,"ignorePunctuation":true,"kanaSame":true},"questions":[{"text":"サンプル","answers":["サンプル"],"image":"q1.png"}]}</script>
 <div class="app">
   <section class="problemArea">
     <div class="topBar"><div id="progress">1 / 1</div><div id="titleText"></div></div>
@@ -46,10 +46,10 @@ button.voice{background:#2563eb;min-width:176px;}button.check{background:#16a34a
     </div>
   </section>
   <section class="answerArea">
-    <textarea id="answerInput" readonly inputmode="none" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="🎤を押して話してください"></textarea>
+    <textarea id="answerInput" inputmode="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="ここをタップして、iPadキーボードのマイクで答えます"></textarea>
     <div class="controlRow">
-      <div id="message" class="message">🎤を押して話してください</div>
-      <button class="voice" id="voiceBtn" onclick="startVoice()">🎤 こたえる</button>
+      <div id="message" class="message">入力欄をタップしてマイク入力してください</div>
+      <button class="voice" id="voiceBtn" onclick="focusAnswer()">入力する</button>
       <button class="check" id="checkBtn" onclick="checkAnswer()">判定</button>
       <button class="retry" id="retryBtn" onclick="retryQuestion()" disabled>もう一度</button>
       <button class="next" id="nextBtn" onclick="nextQuestion()" disabled>次へ</button>
@@ -63,9 +63,8 @@ const DATA = JSON.parse(document.getElementById("quizData").textContent);
 let questions = DATA.questions.map(function(q){ return Object.assign({}, q); });
 let current = 0;
 let answered = false;
-let recognition = null;
-let listening = false;
 let manualMode = false;
+let inputTimer = null;
 
 const progressEl = document.getElementById("progress");
 const titleTextEl = document.getElementById("titleText");
@@ -127,90 +126,14 @@ function fitQuestionText(){
   }
 }
 
-function makeSpeechRecognition(){
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if(!SR){
-    setMessage("このSafariでは音声認識が使えません。先生用を使ってください", "ng");
-    voiceBtn.disabled = true;
-    return null;
-  }
-  const rec = new SR();
-  rec.lang = "ja-JP";
-  rec.interimResults = false;
-  rec.continuous = false;
-  rec.maxAlternatives = 3;
-
-  rec.onstart = function(){
-    listening = true;
-    voiceBtn.disabled = true;
-    setMessage("聞いています。答えを話してください", "listen");
-  };
-
-  rec.onaudiostart = function(){
-    setMessage("マイク入力中です。答えを話してください", "listen");
-  };
-
-  rec.onspeechstart = function(){
-    setMessage("声を聞き取っています", "listen");
-  };
-
-  rec.onresult = function(event){
-    let transcript = "";
-    for(let i=event.resultIndex;i<event.results.length;i++){
-      if(event.results[i] && event.results[i][0]) transcript += event.results[i][0].transcript;
-    }
-    transcript = transcript.trim();
-    answerInputEl.value = transcript;
-    if(transcript){
-      setMessage("聞き取りました", "listen");
-      setTimeout(checkAnswer, 180);
-    }else{
-      setMessage("聞き取れませんでした。もう一度", "ng");
-    }
-  };
-
-  rec.onerror = function(event){
-    const err = event && event.error ? event.error : "unknown";
-    let msg = "音声入力でエラーが出ました: " + err;
-    if(err === "no-speech") msg = "聞き取れませんでした。もう一度";
-    if(err === "audio-capture") msg = "マイクを取得できません。Safariを開き直してください";
-    if(err === "not-allowed") msg = "Safariが音声認識を拒否しました。設定に問題がなければ、この環境ではWeb音声認識が使えない可能性があります";
-    if(err === "service-not-allowed") msg = "Safariの音声認識サービスが使えません。先生用を使ってください";
-    if(err === "network") msg = "音声認識サービスに接続できません。通信環境を確認してください";
-    setMessage(msg, "ng");
-  };
-
-  rec.onend = function(){
-    listening = false;
-    recognition = null;
-    if(!answered) voiceBtn.disabled = false;
-  };
-  return rec;
-}
-
-function startVoice(){
+function focusAnswer(){
   if(answered) return;
-  if(listening && recognition){
-    try{ recognition.abort(); }catch(e){}
-    return;
-  }
-  answerInputEl.value = "";
-  recognition = makeSpeechRecognition();
-  if(!recognition) return;
-  try{
-    recognition.start();
-    setTimeout(function(){
-      if(!listening && !answered){
-        setMessage("音声認識を開始できませんでした。もう一度押してください", "ng");
-        voiceBtn.disabled = false;
-      }
-    }, 1200);
-  }catch(e){
-    recognition = null;
-    setMessage("音声認識を開始できません。Safariを再読み込みしてから試してください", "ng");
-    voiceBtn.disabled = false;
-  }
+  answerInputEl.disabled = false;
+  answerInputEl.readOnly = false;
+  answerInputEl.focus();
+  setMessage("入力欄でiPadキーボードのマイクを押してください", "listen");
 }
+
 
 function showQuestion(){
   answered = false;
@@ -236,12 +159,12 @@ function showQuestion(){
   }
   answerInputEl.value = "";
   answerInputEl.disabled = false;
-  answerInputEl.readOnly = !manualMode;
+  answerInputEl.readOnly = false;
   voiceBtn.disabled = false;
   checkBtn.disabled = false;
   retryBtn.disabled = true;
   nextBtn.disabled = true;
-  setMessage(manualMode ? "手入力モードです" : "🎤を押して話してください", manualMode ? "manual" : "");
+  setMessage("入力欄をタップしてマイク入力してください", "");
   requestAnimationFrame(function(){ fitQuestionText(); setTimeout(fitQuestionText, 120); });
 }
 
@@ -254,7 +177,7 @@ function checkAnswer(){
   if(answered) return;
   const input = normalizeText(answerInputEl.value);
   if(!input){
-    setMessage(manualMode ? "入力してください" : "もう一度話してください", "ng");
+    setMessage("入力してください", "ng");
     return;
   }
   const q = questions[current] || {answers:[]};
@@ -270,16 +193,13 @@ function checkAnswer(){
     nextBtn.focus();
   }else{
     setMessage("ちがいます。もう一度！", "ng");
-    if(manualMode){ answerInputEl.focus(); answerInputEl.select(); }
-    else{ voiceBtn.disabled = false; }
+    answerInputEl.focus();
+    answerInputEl.select();
   }
 }
 
 function retryQuestion(){
   if(!answered) return;
-  if(listening && recognition){
-    try{ recognition.abort(); }catch(e){}
-  }
   showQuestion();
 }
 
@@ -295,19 +215,15 @@ function nextQuestion(){
 
 function setManualMode(on){
   manualMode = !!on;
-  answerInputEl.readOnly = !manualMode;
-  answerInputEl.setAttribute("inputmode", manualMode ? "text" : "none");
-  answerInputEl.placeholder = manualMode ? "手入力できます" : "🎤を押して話してください";
-  checkBtn.style.display = manualMode ? "block" : "none";
-  teacherBtn.textContent = manualMode ? "手入力終了" : "先生用";
+  teacherBtn.textContent = manualMode ? "先生用終了" : "先生用";
   if(manualMode){
-    setMessage("手入力モードです", "manual");
+    setMessage("先生用モードです。手入力もできます", "manual");
     setTimeout(function(){ answerInputEl.focus(); }, 50);
   }else{
-    setMessage("🎤を押して話してください", "");
-    answerInputEl.blur();
+    setMessage("入力欄をタップしてマイク入力してください", "");
   }
 }
+
 
 function openManualMode(){
   if(manualMode){ setManualMode(false); return; }
@@ -326,11 +242,15 @@ function restartQuiz(){
 }
 
 answerInputEl.addEventListener("keydown", function(e){
-  if(!manualMode) return;
   if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); checkAnswer(); }
 });
-answerInputEl.addEventListener("beforeinput", function(e){ if(!manualMode) e.preventDefault(); });
-answerInputEl.addEventListener("paste", function(e){ if(!manualMode) e.preventDefault(); });
+answerInputEl.addEventListener("input", function(){
+  if(answered) return;
+  clearTimeout(inputTimer);
+  inputTimer = setTimeout(function(){
+    if(answerInputEl.value.trim()) checkAnswer();
+  }, 650);
+});
 window.addEventListener("resize", function(){ requestAnimationFrame(fitQuestionText); });
 window.addEventListener("orientationchange", function(){ setTimeout(fitQuestionText, 250); });
 if(document.fonts && document.fonts.ready){ document.fonts.ready.then(function(){ fitQuestionText(); }).catch(function(){}); }
