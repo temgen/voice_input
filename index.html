@@ -36,7 +36,7 @@ button.voice{background:#2563eb;min-width:176px;}button.check{background:#16a34a
 </style>
 </head>
 <body>
-<script type="application/json" id="quizData">{"settings":{"title":"声で答えよう","teacherPasscode":"1234","shuffle":false,"ignoreSpaces":true,"ignorePunctuation":true,"kanaSame":true},"questions":[{"text":"サンプル","answers":["サンプル"],"image":"q1.png"}]}</script>
+<script type="application/json" id="quizData">{"settings":{"title":"声で答えよう","teacherPasscode":"1234","shuffle":false,"ignoreSpaces":true,"ignorePunctuation":true,"kanaSame":true},"questions":[{"text":"サンプルですよ","answers":["サンプルですよ"],"image":"ｑ２.png"}]}</script>
 <div class="app">
   <section class="problemArea">
     <div class="topBar"><div id="progress">1 / 1</div><div id="titleText"></div></div>
@@ -64,7 +64,6 @@ let questions = DATA.questions.map(function(q){ return Object.assign({}, q); });
 let current = 0;
 let answered = false;
 let manualMode = false;
-let inputTimer = null;
 
 const progressEl = document.getElementById("progress");
 const titleTextEl = document.getElementById("titleText");
@@ -241,16 +240,8 @@ function restartQuiz(){
   showQuestion();
 }
 
-answerInputEl.addEventListener("keydown", function(e){
-  if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); checkAnswer(); }
-});
-answerInputEl.addEventListener("input", function(){
-  if(answered) return;
-  clearTimeout(inputTimer);
-  inputTimer = setTimeout(function(){
-    if(answerInputEl.value.trim()) checkAnswer();
-  }, 650);
-});
+// 入力中は自動判定しません。
+// iPad標準音声入力で文章が確定した後、必ず「判定」ボタンを押して正誤判定します。
 window.addEventListener("resize", function(){ requestAnimationFrame(fitQuestionText); });
 window.addEventListener("orientationchange", function(){ setTimeout(fitQuestionText, 250); });
 if(document.fonts && document.fonts.ready){ document.fonts.ready.then(function(){ fitQuestionText(); }).catch(function(){}); }
