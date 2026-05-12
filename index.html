@@ -36,7 +36,7 @@ button.voice{background:#2563eb;min-width:176px;}button.check{background:#16a34a
 </style>
 </head>
 <body>
-<script type="application/json" id="quizData">{"settings":{"title":"声で答えよう","teacherPasscode":"1234","shuffle":false,"ignoreSpaces":true,"ignorePunctuation":true,"kanaSame":true},"questions":[{"text":"朝です。友達に「ていねいに」あいさつしてみましょう。","answers":["おはよう","おはようございます"],"image":"q1.png"},{"text":"朝です。先生に「ていねいに」あいさつしてみましょう。","answers":["おはようございます"],"image":"q2.png"},{"text":"友達が手伝ってくれました。「ていねいに」お礼を言いましょう。","answers":["ありがとう","ありがとうございます","ありがとうございました"],"image":"q3.png"},{"text":"先生が助けてくれました。「ていねいに」お礼を言いましょう。","answers":["ありがとうございます","ありがとうございました"],"image":"q4.png"},{"text":"やらかしました。友達に「ていねいに」あやまりましょう。","answers":["ごめんなさい","ごめん","すいません","すいませんでした"],"image":"q7.png"},{"text":"やってしまいました。先生に「ていねいに」あやまりましょう","answers":["すいません","すいませんでした","申し訳ありません","申し訳ございません","もうしわけありません","もうしわけございません"],"image":"q8.png"},{"text":"友達の持っているプリントが欲しいとき、なんと言っておねがいしますか？　ていねいにおねがいしましょう","answers":["プリントをください","プリントを下さい","プリントをちょうだい"],"image":"q9.png"},{"text":"先生の持っているプリントが欲しいとき、なんと言っておねがいしますか？　ていねいにおねがいしましょう。","answers":["プリントをください","プリントを下さい","プリントをお願いします","プリントをおねがいします","プリントをくださいおねがいします","プリントを下さいお願いします","プリントを下さいおねがいします","プリントをくださいお願いします","プリントお願いします","プリントおねがいします"],"image":"q10.png"}]}</script>
+<script type="application/json" id="quizData">{"settings":{"title":"声で答えよう","teacherPasscode":"1234","shuffle":false,"ignoreSpaces":true,"ignorePunctuation":true,"kanaSame":true},"questions":[{"text":"サンプル","answers":["どうも","どーも"],"image":"スクリーンショット 2026-05-06 163926.png"}]}</script>
 <div class="app">
   <section class="problemArea">
     <div class="topBar"><div id="progress">1 / 1</div><div id="titleText"></div></div>
@@ -127,27 +127,37 @@ function fitQuestionText(){
   }
 }
 
-function initSpeech(){
+function makeSpeechRecognition(){
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if(!SR){
+    setMessage("このSafariでは音声認識が使えません。先生用を使ってください", "ng");
     voiceBtn.disabled = true;
-    setMessage("音声認識が使えません。先生用を使ってください", "ng");
-    return false;
+    return null;
   }
-  recognition = new SR();
-  recognition.lang = "ja-JP";
-  recognition.interimResults = false;
-  recognition.continuous = false;
-  recognition.maxAlternatives = 1;
-  recognition.onstart = function(){
+  const rec = new SR();
+  rec.lang = "ja-JP";
+  rec.interimResults = false;
+  rec.continuous = false;
+  rec.maxAlternatives = 3;
+
+  rec.onstart = function(){
     listening = true;
     voiceBtn.disabled = true;
     setMessage("聞いています。答えを話してください", "listen");
   };
-  recognition.onresult = function(event){
+
+  rec.onaudiostart = function(){
+    setMessage("マイク入力中です。答えを話してください", "listen");
+  };
+
+  rec.onspeechstart = function(){
+    setMessage("声を聞き取っています", "listen");
+  };
+
+  rec.onresult = function(event){
     let transcript = "";
     for(let i=event.resultIndex;i<event.results.length;i++){
-      transcript += event.results[i][0].transcript;
+      if(event.results[i] && event.results[i][0]) transcript += event.results[i][0].transcript;
     }
     transcript = transcript.trim();
     answerInputEl.value = transcript;
@@ -158,28 +168,46 @@ function initSpeech(){
       setMessage("聞き取れませんでした。もう一度", "ng");
     }
   };
-  recognition.onerror = function(event){
-    let msg = "音声入力でエラーが出ました";
-    if(event.error === "no-speech") msg = "聞き取れませんでした。もう一度";
-    if(event.error === "not-allowed" || event.error === "service-not-allowed") msg = "マイクの使用が許可されていません";
-    if(event.error === "audio-capture") msg = "マイクが見つかりません";
+
+  rec.onerror = function(event){
+    const err = event && event.error ? event.error : "unknown";
+    let msg = "音声入力でエラーが出ました: " + err;
+    if(err === "no-speech") msg = "聞き取れませんでした。もう一度";
+    if(err === "audio-capture") msg = "マイクを取得できません。Safariを開き直してください";
+    if(err === "not-allowed") msg = "Safariが音声認識を拒否しました。設定に問題がなければ、この環境ではWeb音声認識が使えない可能性があります";
+    if(err === "service-not-allowed") msg = "Safariの音声認識サービスが使えません。先生用を使ってください";
+    if(err === "network") msg = "音声認識サービスに接続できません。通信環境を確認してください";
     setMessage(msg, "ng");
   };
-  recognition.onend = function(){
+
+  rec.onend = function(){
     listening = false;
+    recognition = null;
     if(!answered) voiceBtn.disabled = false;
   };
-  return true;
+  return rec;
 }
 
 function startVoice(){
   if(answered) return;
-  if(!recognition && !initSpeech()) return;
+  if(listening && recognition){
+    try{ recognition.abort(); }catch(e){}
+    return;
+  }
+  answerInputEl.value = "";
+  recognition = makeSpeechRecognition();
+  if(!recognition) return;
   try{
-    answerInputEl.value = "";
     recognition.start();
+    setTimeout(function(){
+      if(!listening && !answered){
+        setMessage("音声認識を開始できませんでした。もう一度押してください", "ng");
+        voiceBtn.disabled = false;
+      }
+    }, 1200);
   }catch(e){
-    setMessage("少し待ってからもう一度押してください", "ng");
+    recognition = null;
+    setMessage("音声認識を開始できません。Safariを再読み込みしてから試してください", "ng");
     voiceBtn.disabled = false;
   }
 }
